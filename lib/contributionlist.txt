@@ -1,0 +1,16 @@
+CONTRIBUTION LIST
+
+ADAM PEFANIS - 
+- Add/Remove Methods
+- Search (Name, Serial)
+- Toy Classes and Inheritance
+- Exceptions
+- JUnit Testing
+
+
+TONY NGUYEN - 
+- User Interface
+- Main menu
+- Sub menu
+- Program layout/structure
+- Saving/loading
