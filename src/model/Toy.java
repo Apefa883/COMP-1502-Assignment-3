@@ -1,5 +1,7 @@
 package model;
 
+import javafx.scene.Node;
+
 public abstract class Toy {
 	protected String serial;
 	protected String name;
@@ -78,4 +80,5 @@ public abstract class Toy {
 	public String format() {
 		return "bruh";
 	}
+
 }

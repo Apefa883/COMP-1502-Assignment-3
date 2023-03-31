@@ -1,5 +1,6 @@
 package application;
 	
+import controller.SampleController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("../view/Sample.fxml"));
-			Scene scene = new Scene(root,400,400);
+			Scene scene = new Scene(root,936,578);
 			scene.getStylesheets().add(getClass().getResource("../view/application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -22,6 +23,7 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		new SampleController();
 		launch(args);
 	}
 }
