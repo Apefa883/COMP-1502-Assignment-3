@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import model.Toy;
 import model.animal;
 import model.boardgame;
@@ -34,7 +35,10 @@ public class SampleController implements Initializable {
 	
     @FXML
     private ListView<Toy> listView;
-
+    
+    @FXML
+    private ToggleGroup SearchOption;
+    
     @FXML
     private Button btnBuy, btnClear;
 
@@ -78,7 +82,20 @@ public class SampleController implements Initializable {
     @FXML
     public void search(ActionEvent e) {
     	listView.getItems().clear();
-    	listView.getItems().addAll(btnSearch(enterType.getText(),Inventory));
+    	if (btnType.isSelected()) {
+    		listView.getItems().addAll(btnSearch(enterType.getText(),Inventory));
+    	}
+    	if (btnName.isSelected()) {
+        	listView.getItems().addAll(btnSearch(enterName.getText(),Inventory));
+        }
+    	if (btnSN.isSelected()) {
+        	listView.getItems().addAll(btnSearch(enterSN.getText(),Inventory));
+        }
+    }
+    
+    @FXML
+    public void clear(ActionEvent e) {
+    	listView.getItems().clear();
     }
     
     
