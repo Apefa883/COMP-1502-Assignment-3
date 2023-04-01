@@ -2,6 +2,8 @@ package controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +12,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,7 +44,7 @@ public class SampleController implements Initializable {
     private ToggleGroup SearchOption;
     
     @FXML
-    private Button btnBuy, btnClear;
+    private Button btnBuy, btnClear, btnSave;
 
     @FXML
     private RadioButton btnName, btnSN, btnType; // Search Radio Buttons
@@ -49,7 +53,7 @@ public class SampleController implements Initializable {
     private Button btnRemove, btnSearch;
 
     @FXML
-    private ComboBox<?> categoryBox;
+    private ComboBox<String> categoryBox;
 
     @FXML
     private TextField enterType, enterSNRemove, enterSN, enterName; // Search Text Fields.
@@ -59,6 +63,8 @@ public class SampleController implements Initializable {
     newAge; // Add Toy Text Fields
 
     Toy currentSelection;
+    
+    ObservableList<String> categoryList = FXCollections.observableArrayList("Figure", "Animal", "Puzzle", "Board Game");
     
 	/**
 	 * Constructor, which launches the application and loads up all data
@@ -70,7 +76,12 @@ public class SampleController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 		listView.getItems().addAll(Inventory);
+		
+		categoryBox.setValue("Figure");
+		categoryBox.setItems(categoryList);
+		
 	}
 	
     @FXML
@@ -108,8 +119,48 @@ public class SampleController implements Initializable {
                     input.getName().toLowerCase().contains(word.toLowerCase()));
         }).collect(Collectors.toList());
 	}
-
-
+	
+	@FXML
+	public void save(ActionEvent e) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		categoryBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Figure")) {
+        		sb.append(newSN.getText().toString() + ";" + newClassification.getText().toString() + ";" + newName.getText().toString() + ";" + 
+        				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() + ";" 
+        				+ newAge.getText().toString());
+            }
+        		else if (newValue.equals("Animal")) {
+            		sb.append(newSN.getText().toString() + ";" + newMaterial.getText().toString() + ";" + 
+            				newSize.getText().toString() + ";" + newName.getText().toString() + ";" + 
+            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
+            				+ ";" + newAge.getText().toString());
+            }
+        		else if (newValue.equals("Puzzle")) {
+            		sb.append(newSN.getText().toString() + ";" + newType.getText().toString() + ";" + newName.getText().toString() + ";" + 
+            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
+            				+ ";" + newAge.getText().toString());
+            }
+        		else if (newValue.equals("Board Game")) {
+            		sb.append(newSN.getText().toString() + ";" + newMaterial.getText().toString() + ";" + 
+            				newMinPlayers.getText().toString() + ";" + newMaxPlayers.getText().toString() + ";" + newName.getText().toString() + 
+            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
+            				+ ";" + newAge.getText().toString());
+            }
+        });
+		
+		File file = new File(FILE_PATH);
+		try {
+			FileWriter fw = new FileWriter(file, true);
+			fw.write(sb.toString());
+			fw.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+	}
+	
 	/**
 	 * Loads all data contained in the toys.txt file.
 	 */

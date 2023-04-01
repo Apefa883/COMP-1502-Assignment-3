@@ -85,8 +85,8 @@
                               <TextField fx:id="newSize" layoutX="750.0" layoutY="162.0" prefHeight="26.0" prefWidth="170.0" />
                               <TextField fx:id="newDesigners" layoutX="738.0" layoutY="427.0" prefHeight="26.0" prefWidth="182.0" />
                               <TextField fx:id="newMinPlayers" layoutX="806.0" layoutY="338.0" prefHeight="26.0" prefWidth="114.0" />
-                              <ComboBox fx:id="categoryBox" layoutX="112.0" layoutY="136.0" prefHeight="26.0" prefWidth="166.0" promptText="Figure" />
-                              <Button layoutX="50.0" layoutY="453.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="194.0" text="Save">
+                              <ComboBox fx:id="categoryBox" layoutX="111.0" layoutY="136.0" prefHeight="26.0" prefWidth="166.0" promptText="Figure" />
+                              <Button fx:id="btnSave" layoutX="50.0" layoutY="453.0" mnemonicParsing="false" onAction="#save" prefHeight="38.0" prefWidth="194.0" text="Save">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
