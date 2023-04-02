@@ -21,7 +21,7 @@
          <children>
             <TabPane prefHeight="578.0" prefWidth="936.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Home">
+                <Tab fx:id="hometab" onSelectionChanged="#ClickedHomeTab" text="Home">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -182,7 +182,7 @@
                            </children></AnchorPane>
                   </content>
                 </Tab>
-                  <Tab text="Remove Toy">
+                  <Tab fx:id="removetab" text="Remove Toy">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>

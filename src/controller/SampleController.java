@@ -18,6 +18,7 @@ import exception.NegativePrice;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -88,6 +89,9 @@ public class SampleController implements Initializable {
     private TextField newMaterial, newMaxPlayers, newMinPlayers, newName, newPrice, newSN, newDesigners, newCount, newBrand,
     newAge; // Add Toy Text Fields
 
+    @FXML
+    private Tab removetab, hometab;
+    
     Toy currentSelection;
     
 
@@ -131,6 +135,7 @@ public class SampleController implements Initializable {
     		Inventory.remove(SearchSerial(enterSNRemove.getText()));
     	}
     	listView.getItems().addAll(Inventory);
+    	WriteToFile();
     }
     
     @FXML
@@ -265,9 +270,9 @@ public class SampleController implements Initializable {
 			
     	} else if(categoryBox.getValue().matches("Board Game")) {
     		String designer = newDesigners.getText();
-    		String ageRange = getAgeRange();
+    		String playerNums = getAgeRange();
     		
-    		if(ageRange.length() == 0) {
+    		if(playerNums.length() == 0) {
     			saveable = false;
     			System.out.println("Invalid age range!");
     		}
@@ -278,7 +283,7 @@ public class SampleController implements Initializable {
 			}
 			
 			if(saveable) {
-				Toy newToy = new boardgame(serial, name, brand, price, availableCount, ageRating, designer, ageRange);
+				Toy newToy = new boardgame(serial, name, brand, price, availableCount, ageRating, playerNums, designer);
 				Inventory.add(newToy);
 				System.out.println("Saved!");
 			}  else {
@@ -547,16 +552,24 @@ public class SampleController implements Initializable {
     	}
     }
     
-    
     /**
-     * Checks the ages and throws a hissy fit if the min is over the max
-     * @param maxAge
-     * @param minAge
-     * @return a string with both ages concatinated
+     * triggers when the remove tab is clicked
+     * @param event
      */
-    public String checkAges(String maxAge, String minAge) {
-    	return "The Penis (Eeek!)";
+    @FXML
+    void ClickedRemoveTab(Event event) {
+    	listView.getItems().clear();
+    	listView.getItems().addAll(Inventory);
     }
     
+    /**
+     * Triggers when the home tab is clicked
+     * @param event
+     */
+    @FXML
+    void ClickedHomeTab(Event event) {
+    	searchListView.getItems().clear();
+    	searchListView.getItems().addAll(Inventory);
+    }
 
 }
