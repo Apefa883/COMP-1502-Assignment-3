@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import exception.AgeMismatch;
+import exception.NegativePrice;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -167,12 +170,172 @@ public class SampleController implements Initializable {
     }
     
 	
+    /**
+     * Contrary to its name, this function does not save everything to a txt file.
+     * Rather, it adds the new toy to the arraylist.
+     * @param save button pressed
+     */
 	@FXML
 	public void save(ActionEvent e) {
 		
-		System.out.println("Sussy baka");
+		boolean saveable = true;
+		String serial = newSN.getText();
+		String name = newName.getText();
+		String brand = newBrand.getText();
+		float price = 0;
+		int availableCount = 0;
+		int ageRating = 0;
+		try {
+			price = Float.parseFloat(newPrice.getText());
+			availableCount = Integer.parseInt(newCount.getText());
+			ageRating = Integer.parseInt(newAge.getText());
+			Double.parseDouble(serial);
+			
+			if(price <= 0 || availableCount <= 0 || ageRating <= 0) {
+				throw new NegativePrice(price);
+			}
+		} catch (NegativePrice badprice) {
+			System.out.println("Error! Negative numerical value entered!!");
+			saveable = false;
+		} catch (Exception fart) {
+			System.out.println("Error! Values are not numbers!!");
+			saveable = false;
+		}
+		if(serial.length() != 10 || name.length() <= 0 || brand.length() <= 0) {
+			System.out.println("Serial, name or brand lengths are invalid!");
+			saveable = false;
+		}
+		if(SearchSerial(serial) != -1) {
+			System.out.println("Serial already exists!");
+			saveable = false;
+		}
+		
+		
+		if(categoryBox.getValue().matches("Figure")) {
+			char classification = newClassification.getValue().charAt(0);
+			
+			if(Integer.parseInt(serial.charAt(0)+"") >= 2) {
+				saveable = false;
+				System.out.println("Serial does not match product type!");
+			}
+			
+			if(saveable) {
+				Toy newToy = new figure(serial, name, brand, price, availableCount, ageRating, classification);
+				Inventory.add(newToy);
+				System.out.println("Saved!");
+			}  else {
+				System.out.println("Could not save! Invalid values!");
+			}
+			
+			
+    	} else if(categoryBox.getValue().matches("Animal")) {
+    		String material = newMaterial.getText();
+    		char size = newSize.getValue().charAt(0);
+			
+			if(Integer.parseInt(serial.charAt(0)+"") >= 4 || Integer.parseInt(serial.charAt(0)+"") <= 1) {
+				saveable = false;
+				System.out.println("Serial does not match product type!");
+			}
+			
+			if(saveable) {
+				Toy newToy = new animal(serial, name, brand, price, availableCount, ageRating, material, size);
+				Inventory.add(newToy);
+				System.out.println("Saved!");
+			}  else {
+				System.out.println("Could not save! Invalid values!");
+			}
+    		
+			
+    	} else if(categoryBox.getValue().matches("Puzzle")) {
+    		char puzzletype = newClassification.getValue().charAt(0);
+			
+			if(Integer.parseInt(serial.charAt(0)+"") >= 7 || Integer.parseInt(serial.charAt(0)+"") <= 3) {
+				saveable = false;
+				System.out.println("Serial does not match product type!");
+			}
+			
+			if(saveable) {
+				Toy newToy = new puzzle(serial, name, brand, price, availableCount, ageRating, puzzletype);
+				Inventory.add(newToy);
+				System.out.println("Saved!");
+			}  else {
+				System.out.println("Could not save! Invalid values!");
+			}
+    		
+			
+    	} else if(categoryBox.getValue().matches("Board Game")) {
+    		String designer = newDesigners.getText();
+    		String ageRange = getAgeRange();
+    		
+    		if(ageRange.length() == 0) {
+    			saveable = false;
+    			System.out.println("Invalid age range!");
+    		}
+			
+			if(Integer.parseInt(serial.charAt(0)+"") <= 6 || Integer.parseInt(serial.charAt(0)+"") >= 10) {
+				saveable = false;
+				System.out.println("Serial does not match product type!");
+			}
+			
+			if(saveable) {
+				Toy newToy = new boardgame(serial, name, brand, price, availableCount, ageRating, designer, ageRange);
+				Inventory.add(newToy);
+				System.out.println("Saved!");
+			}  else {
+				System.out.println("Could not save! Invalid values!");
+			}
+    	}
+		WriteToFile();
 	}
 	
+	
+	
+	/**
+	 * Saves all data to toys.txt
+	 */
+	private void WriteToFile() {
+		try {
+			File db = new File(FILE_PATH);
+			PrintWriter pw = new PrintWriter(db);
+			
+			
+			for (Toy t: Inventory) {
+				pw.println(t.format());
+			}
+			
+			pw.close();
+		} catch(IOException g) {
+		}
+	}
+	
+	/**
+	 * Gets the age range of a board game
+	 * @return returns an empty string if the age range is invalid. Otherwise, returns a "min-max" string.
+	 */
+	private String getAgeRange() {
+		int max = 0;
+		int min = 0;
+		String agerange = "";
+		try {
+			max = Integer.parseInt(newMaxPlayers.getText());
+			min = Integer.parseInt(newMinPlayers.getText());
+			
+			if(max < min) {
+				throw new AgeMismatch(min,max);
+			} else {
+				agerange = (min+"-"+max);
+			}
+		} catch(AgeMismatch badage) {
+			System.out.println("Ages are mismatched!");
+		} catch(Exception e) {
+			System.out.println("Could not parse number values!");
+		}
+		return agerange;
+	}
+
+
+
+
 	/**
 	 * Loads all data contained in the toys.txt file.
 	 */
@@ -333,6 +496,7 @@ public class SampleController implements Initializable {
     			searchListView.getItems().addAll(Inventory);
     		}
     	}
+    	WriteToFile();
     }
     
     
@@ -381,6 +545,17 @@ public class SampleController implements Initializable {
     		puzzleoptionpanel.setVisible(false);
     		boardgameoptionpanel.setVisible(true);
     	}
+    }
+    
+    
+    /**
+     * Checks the ages and throws a hissy fit if the min is over the max
+     * @param maxAge
+     * @param minAge
+     * @return a string with both ages concatinated
+     */
+    public String checkAges(String maxAge, String minAge) {
+    	return "The Penis (Eeek!)";
     }
     
 
