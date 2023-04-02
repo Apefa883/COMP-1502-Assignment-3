@@ -21,8 +21,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import model.Toy;
 import model.animal;
 import model.boardgame;
@@ -32,10 +36,12 @@ import view.AppMenu;
 
 public class SampleController implements Initializable {
 	
-	ArrayList<Toy> Inventory = new ArrayList<Toy>();
+	ObservableList<Toy> Inventory = FXCollections.observableArrayList();
+	ObservableList<Toy> SearchResults = FXCollections.observableArrayList();
 	AppMenu AppMen;
 	private final String FILE_PATH = "res/toys.txt";
 	public boolean flag;
+	
 	
     @FXML
     private ListView<Toy> listView;
@@ -63,6 +69,9 @@ public class SampleController implements Initializable {
     newAge; // Add Toy Text Fields
 
     Toy currentSelection;
+
+    @FXML
+    private ListView<Toy> searchListView;
     
     ObservableList<String> categoryList = FXCollections.observableArrayList("Figure", "Animal", "Puzzle", "Board Game");
     
@@ -78,7 +87,7 @@ public class SampleController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		listView.getItems().addAll(Inventory);
-		
+		searchListView.getItems().addAll(Inventory);
 		categoryBox.setValue("Figure");
 		categoryBox.setItems(categoryList);
 		
@@ -86,35 +95,55 @@ public class SampleController implements Initializable {
 	
     @FXML
     public void removeToy(ActionEvent e) {
-    	int selectedID = listView.getSelectionModel().getSelectedIndex();
-    	listView.getItems().remove(selectedID);
+    	listView.getItems().clear();
+    	if(SearchSerial(enterSNRemove.getText()) != -1) {
+    		Inventory.remove(SearchSerial(enterSNRemove.getText()));
+    	}
+    	listView.getItems().addAll(Inventory);
     }
     
     @FXML
     public void search(ActionEvent e) {
-    	listView.getItems().clear();
+    	//Type Search
     	if (btnType.isSelected()) {
-    		listView.getItems().addAll(btnSearch(enterType.getText(),Inventory));
+    		if(enterType.getText().length() > 0) {
+    			searchListByName(enterType.getText().toLowerCase());
+    			searchListView.getItems().clear();
+    			searchListView.getItems().addAll(SearchResults);
+    		}
     	}
+    	//Name Search
     	if (btnName.isSelected()) {
-        	listView.getItems().addAll(btnSearch(enterName.getText(),Inventory));
+    		if(enterName.getText().length() > 0) {
+    			searchListByName(enterName.getText().toLowerCase());
+    			searchListView.getItems().clear();
+    			searchListView.getItems().addAll(SearchResults);
+    		}
         }
+    	//Serial Search
     	if (btnSN.isSelected()) {
-        	listView.getItems().addAll(btnSearch(enterSN.getText(),Inventory));
+    		if(enterSN.getText().length() == 10) {
+    			searchListBySerial(enterSN.getText());
+    			searchListView.getItems().clear();
+    			searchListView.getItems().addAll(SearchResults);
+    		} else {
+    			System.out.println("Bad serial!");
+    		}
         }
     }
     
     @FXML
     public void clear(ActionEvent e) {
-    	listView.getItems().clear();
+    	searchListView.getItems().clear();
+    	searchListView.getItems().addAll(Inventory);
     }
     
     
-	private List<Toy> btnSearch(String searchWords, ArrayList<Toy> listOfStrings) {
+	private List<Toy> btnSearch(String searchWords, ObservableList<Toy> inventory2) {
 		
 		List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
 		
-        return listOfStrings.stream().filter(input -> {
+        return inventory2.stream().filter(input -> {
             return searchWordsArray.stream().allMatch(word ->
                     input.getName().toLowerCase().contains(word.toLowerCase()));
         }).collect(Collectors.toList());
@@ -210,5 +239,89 @@ public class SampleController implements Initializable {
 				System.out.println("ERROR: ARCHIVE FILE NOT FOUND!");
 			}
 		}
+		for(int i = 0; i < Inventory.size(); i++) {
+			System.out.println(Inventory.get(i));
+		}
 	}
+	
+	
+	
+    @FXML
+    void EnterRemovalSerial(KeyEvent event) {
+    	if(enterSNRemove.getText().length() == 10) {
+    		if(SearchSerial(enterSNRemove.getText()) != -1) {
+    			int choice = SearchSerial(enterSNRemove.getText());
+    			System.out.println("Selected valid value!");
+    		}
+    	}
+    	
+    }
+	
+    @FXML
+    void RemovalSelected(MouseEvent event) {
+    	enterSNRemove.setText(listView.getSelectionModel().getSelectedItem().getSerial());
+    }
+    
+    public int SearchSerial(String inputserial) {
+    	int spot = -1;
+    	
+    	for(int i = 0; i < Inventory.size(); i++) {
+    		if(Inventory.get(i).getSerial().matches(inputserial)) {
+    			spot = i;
+    		}
+    	}
+    	return spot;
+    }
+    
+    /**
+     * Populates the searchlist with serials matching the provided value. 
+     */
+    public void searchListBySerial(String serialToFind) {
+    	SearchResults.clear();
+    	if(SearchSerial(serialToFind) != -1) {
+    		SearchResults.add(Inventory.get(SearchSerial(serialToFind)));
+    	}
+    }
+    
+    public void searchListByName(String nameToFind) {
+    	SearchResults.clear();
+    	for(int i = 0; i < Inventory.size(); i++) {
+    		if(Inventory.get(i).getName().contains(nameToFind)) {
+    			SearchResults.add(Inventory.get(i));
+    		}
+    	}
+    }
+    
+    public void searchListByType(String typeToFind) {
+    	SearchResults.clear();
+    	
+    	if(typeToFind.contains("animal")) {
+    		for(int i = 0; i < Inventory.size(); i++) {
+    			if(Inventory.get(i) instanceof animal) {
+    				SearchResults.add(Inventory.get(i));
+    			}
+    		}
+    	} else if(typeToFind.contains("boardgame")) {
+    		for(int i = 0; i < Inventory.size(); i++) {
+    			if(Inventory.get(i) instanceof animal) {
+    				SearchResults.add(Inventory.get(i));
+    			}
+    		}
+    	} else if(typeToFind.contains("figure")) {
+    		for(int i = 0; i < Inventory.size(); i++) {
+    			if(Inventory.get(i) instanceof figure) {
+    				SearchResults.add(Inventory.get(i));
+    			}
+    		}
+    	} else if(typeToFind.contains("puzzle")) {
+    		for(int i = 0; i < Inventory.size(); i++) {
+    			if(Inventory.get(i) instanceof puzzle) {
+    				SearchResults.add(Inventory.get(i));
+    			}
+    		}
+    	}
+    	
+    	
+    }
+
 }
