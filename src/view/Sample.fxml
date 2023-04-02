@@ -35,7 +35,7 @@
                               <Line endX="134.6000213623047" layoutX="115.0" layoutY="324.0" startX="-100.0" />
                               <Button fx:id="btnSearch" layoutX="22.0" layoutY="388.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="102.0" text="Search" />
                               <Button fx:id="btnClear" layoutX="144.0" layoutY="388.0" mnemonicParsing="false" onAction="#clear" prefHeight="26.0" prefWidth="105.0" text="Clear" />
-                              <Button fx:id="btnBuy" layoutX="530.0" layoutY="492.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Buy" />
+                              <Button fx:id="btnBuy" layoutX="530.0" layoutY="492.0" mnemonicParsing="false" onAction="#buyThis" prefHeight="26.0" prefWidth="122.0" text="Buy" />
                               <Label layoutX="22.0" layoutY="72.0" text="Search Inventory:">
                                  <font>
                                     <Font size="17.0" />
@@ -189,7 +189,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="enterSNRemove" layoutX="76.0" layoutY="200.0" onKeyReleased="#EnterRemovalSerial" prefHeight="26.0" prefWidth="167.0" />
+                              <TextField fx:id="enterSNRemove" layoutX="76.0" layoutY="200.0" prefHeight="26.0" prefWidth="167.0" />
                               <Button fx:id="btnRemove" layoutX="67.0" layoutY="386.0" mnemonicParsing="false" onAction="#removeToy" prefHeight="40.0" prefWidth="134.0" text="Remove">
                                  <font>
                                     <Font size="18.0" />

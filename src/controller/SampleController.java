@@ -107,7 +107,7 @@ public class SampleController implements Initializable {
     	//Type Search
     	if (btnType.isSelected()) {
     		if(enterType.getText().length() > 0) {
-    			searchListByName(enterType.getText().toLowerCase());
+    			searchListByType(enterType.getText().toLowerCase());
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
     		}
@@ -138,16 +138,6 @@ public class SampleController implements Initializable {
     	searchListView.getItems().addAll(Inventory);
     }
     
-    
-	private List<Toy> btnSearch(String searchWords, ObservableList<Toy> inventory2) {
-		
-		List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
-		
-        return inventory2.stream().filter(input -> {
-            return searchWordsArray.stream().allMatch(word ->
-                    input.getName().toLowerCase().contains(word.toLowerCase()));
-        }).collect(Collectors.toList());
-	}
 	
 	@FXML
 	public void save(ActionEvent e) {
@@ -239,29 +229,23 @@ public class SampleController implements Initializable {
 				System.out.println("ERROR: ARCHIVE FILE NOT FOUND!");
 			}
 		}
-		for(int i = 0; i < Inventory.size(); i++) {
-			System.out.println(Inventory.get(i));
-		}
 	}
 	
 	
-	
-    @FXML
-    void EnterRemovalSerial(KeyEvent event) {
-    	if(enterSNRemove.getText().length() == 10) {
-    		if(SearchSerial(enterSNRemove.getText()) != -1) {
-    			int choice = SearchSerial(enterSNRemove.getText());
-    			System.out.println("Selected valid value!");
-    		}
-    	}
-    	
-    }
-	
+    /**
+     * Sets the text in the serial removal space to the selected item.
+     * @param event
+     */
     @FXML
     void RemovalSelected(MouseEvent event) {
     	enterSNRemove.setText(listView.getSelectionModel().getSelectedItem().getSerial());
     }
     
+    /**
+     * Searches the inventory for a matching serial
+     * @param inputserial the serial to find
+     * @return returns the spot in inventory of the matching item.
+     */
     public int SearchSerial(String inputserial) {
     	int spot = -1;
     	
@@ -283,15 +267,24 @@ public class SampleController implements Initializable {
     	}
     }
     
+    /**
+     * Seaches for all items in the inventory that match the provided name
+     * @param nameToFind the given name
+     */
     public void searchListByName(String nameToFind) {
     	SearchResults.clear();
     	for(int i = 0; i < Inventory.size(); i++) {
-    		if(Inventory.get(i).getName().contains(nameToFind)) {
+    		if(Inventory.get(i).getName().toLowerCase().contains(nameToFind)) {
     			SearchResults.add(Inventory.get(i));
     		}
     	}
     }
     
+    /**
+     * Handles searches by type.
+     * Clears the searchresult list, then adds all items it can find.
+     * @param typeToFind
+     */
     public void searchListByType(String typeToFind) {
     	SearchResults.clear();
     	
@@ -320,8 +313,28 @@ public class SampleController implements Initializable {
     			}
     		}
     	}
-    	
-    	
     }
+    
+    /**
+     * Buys the selected product.
+     * @param event
+     */
+    @FXML
+    void buyThis(ActionEvent event) {
+    	if(searchListView.getSelectionModel().getSelectedItem() != null) {
+    		String chosenSerial = searchListView.getSelectionModel().getSelectedItem().getSerial();
+    		Inventory.get(SearchSerial(chosenSerial)).sellToy(1);
+    		if(SearchResults.size() > 0) {
+    			searchListView.getItems().clear();
+    			searchListView.getItems().addAll(SearchResults);
+    		} else {
+    			searchListView.getItems().clear();
+    			searchListView.getItems().addAll(Inventory);
+    		}
+    	}
+    }
+    
+    
+    
 
 }
