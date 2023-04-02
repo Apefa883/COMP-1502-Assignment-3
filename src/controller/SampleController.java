@@ -126,6 +126,7 @@ public class SampleController implements Initializable {
 		
 		newType.setValue("Mechanical");
 		newType.setItems(puzzleTypeList);
+		AppMenu AppMen = new AppMenu();
 	}
 	
     @FXML
@@ -163,7 +164,7 @@ public class SampleController implements Initializable {
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
     		} else {
-    			System.out.println("Bad serial!");
+    			AppMen.tellBadSerial();
     		}
         }
     }
@@ -200,18 +201,18 @@ public class SampleController implements Initializable {
 				throw new NegativePrice(price);
 			}
 		} catch (NegativePrice badprice) {
-			System.out.println("Error! Negative numerical value entered!!");
+			AppMen.tellNegativeVal();
 			saveable = false;
 		} catch (Exception fart) {
-			System.out.println("Error! Values are not numbers!!");
+			AppMen.tellNotNumbers();
 			saveable = false;
 		}
 		if(serial.length() != 10 || name.length() <= 0 || brand.length() <= 0) {
-			System.out.println("Serial, name or brand lengths are invalid!");
+			AppMen.tellEmptyField();
 			saveable = false;
 		}
 		if(SearchSerial(serial) != -1) {
-			System.out.println("Serial already exists!");
+			AppMen.tellExistingSerial();
 			saveable = false;
 		}
 		
@@ -221,15 +222,15 @@ public class SampleController implements Initializable {
 			
 			if(Integer.parseInt(serial.charAt(0)+"") >= 2) {
 				saveable = false;
-				System.out.println("Serial does not match product type!");
+				AppMen.tellNonMatchSerial();
 			}
 			
 			if(saveable) {
 				Toy newToy = new figure(serial, name, brand, price, availableCount, ageRating, classification);
 				Inventory.add(newToy);
-				System.out.println("Saved!");
+				AppMen.promptSaved();
 			}  else {
-				System.out.println("Could not save! Invalid values!");
+				AppMen.tellCouldntSave();
 			}
 			
 			
@@ -239,15 +240,15 @@ public class SampleController implements Initializable {
 			
 			if(Integer.parseInt(serial.charAt(0)+"") >= 4 || Integer.parseInt(serial.charAt(0)+"") <= 1) {
 				saveable = false;
-				System.out.println("Serial does not match product type!");
+				AppMen.tellNonMatchSerial();
 			}
 			
 			if(saveable) {
 				Toy newToy = new animal(serial, name, brand, price, availableCount, ageRating, material, size);
 				Inventory.add(newToy);
-				System.out.println("Saved!");
+				AppMen.promptSaved();
 			}  else {
-				System.out.println("Could not save! Invalid values!");
+				AppMen.tellCouldntSave();
 			}
     		
 			
@@ -256,15 +257,15 @@ public class SampleController implements Initializable {
 			
 			if(Integer.parseInt(serial.charAt(0)+"") >= 7 || Integer.parseInt(serial.charAt(0)+"") <= 3) {
 				saveable = false;
-				System.out.println("Serial does not match product type!");
+				AppMen.tellNonMatchSerial();
 			}
 			
 			if(saveable) {
 				Toy newToy = new puzzle(serial, name, brand, price, availableCount, ageRating, puzzletype);
 				Inventory.add(newToy);
-				System.out.println("Saved!");
+				AppMen.promptSaved();
 			}  else {
-				System.out.println("Could not save! Invalid values!");
+				AppMen.tellNonMatchSerial();
 			}
     		
 			
@@ -274,20 +275,20 @@ public class SampleController implements Initializable {
     		
     		if(playerNums.length() == 0) {
     			saveable = false;
-    			System.out.println("Invalid age range!");
+    			AppMen.tellPlayerCountMismatch();
     		}
 			
 			if(Integer.parseInt(serial.charAt(0)+"") <= 6 || Integer.parseInt(serial.charAt(0)+"") >= 10) {
 				saveable = false;
-				System.out.println("Serial does not match product type!");
+				AppMen.tellNonMatchSerial();
 			}
 			
 			if(saveable) {
 				Toy newToy = new boardgame(serial, name, brand, price, availableCount, ageRating, playerNums, designer);
 				Inventory.add(newToy);
-				System.out.println("Saved!");
+				AppMen.promptSaved();
 			}  else {
-				System.out.println("Could not save! Invalid values!");
+				AppMen.tellCouldntSave();
 			}
     	}
 		WriteToFile();
@@ -331,9 +332,9 @@ public class SampleController implements Initializable {
 				agerange = (min+"-"+max);
 			}
 		} catch(AgeMismatch badage) {
-			System.out.println("Ages are mismatched!");
+			AppMen.tellPlayerCountMismatch();
 		} catch(Exception e) {
-			System.out.println("Could not parse number values!");
+			AppMen.tellNotNumbers();
 		}
 		return agerange;
 	}
@@ -387,7 +388,7 @@ public class SampleController implements Initializable {
 				}
 				fileReader.close();
 			} catch(FileNotFoundException e) {
-				System.out.println("ERROR: ARCHIVE FILE NOT FOUND!");
+				AppMen.tellNoFile();
 			}
 		}
 	}
