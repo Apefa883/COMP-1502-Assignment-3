@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -63,6 +64,9 @@ public class SampleController implements Initializable {
     private ToggleGroup SearchOption;
     
     @FXML
+    private Label SearchPrompt;
+    
+    @FXML
     private Button btnBuy, btnClear, btnSave;
 
     @FXML
@@ -75,7 +79,7 @@ public class SampleController implements Initializable {
     private ComboBox<String> categoryBox, newSize, newClassification, newType;
 
     @FXML
-    private TextField enterType, enterSNRemove, enterSN, enterName; // Search Text Fields.
+    private TextField enterSNRemove, enterSearchTerm; // Search Text Fields.
 
     @FXML
     private TextField newMaterial, newMaxPlayers, newMinPlayers, newName, newPrice, newSN, newDesigners, newCount, newBrand,
@@ -130,24 +134,24 @@ public class SampleController implements Initializable {
     public void search(ActionEvent e) {
     	//Type Search
     	if (btnType.isSelected()) {
-    		if(enterType.getText().length() > 0) {
-    			searchListByType(enterType.getText().toLowerCase());
+    		if(enterSearchTerm.getText().length() > 0) {
+    			searchListByType(enterSearchTerm.getText().toLowerCase());
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
     		}
     	}
     	//Name Search
     	if (btnName.isSelected()) {
-    		if(enterName.getText().length() > 0) {
-    			searchListByName(enterName.getText().toLowerCase());
+    		if(enterSearchTerm.getText().length() > 0) {
+    			searchListByName(enterSearchTerm.getText().toLowerCase());
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
     		}
         }
     	//Serial Search
     	if (btnSN.isSelected()) {
-    		if(enterSN.getText().length() == 10) {
-    			searchListBySerial(enterSN.getText());
+    		if(enterSearchTerm.getText().length() == 10) {
+    			searchListBySerial(enterSearchTerm.getText());
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
     		} else {
@@ -332,6 +336,28 @@ public class SampleController implements Initializable {
     }
     
     
+    
+    @FXML
+    void PickedName(ActionEvent event) {
+    	SearchPrompt.setText("Product Name:");
+    }
+
+    @FXML
+    void PickedSerial(ActionEvent event) {
+    	SearchPrompt.setText("Serial Number (SN):");
+    }
+
+    @FXML
+    void PickedType(ActionEvent event) {
+    	SearchPrompt.setText("Product Type:");
+    }
+    
+    
+    /**
+     * Handles which subwindow to display in the Add Toy tab, depending on whether a figure, animal, puzzle or
+     * boardgame has been selected.
+     * @param event
+     */
     @FXML
     void SelectCategory(ActionEvent event) {
     	if(categoryBox.getValue().matches("Figure")) {
