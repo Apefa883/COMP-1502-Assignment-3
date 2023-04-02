@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -27,6 +28,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import model.Toy;
 import model.animal;
 import model.boardgame;
@@ -42,6 +44,17 @@ public class SampleController implements Initializable {
 	private final String FILE_PATH = "res/toys.txt";
 	public boolean flag;
 	
+    @FXML
+    private Pane animaloptionpanel;
+
+    @FXML
+    private Pane boardgameoptionpanel;
+    
+    @FXML
+    private Pane puzzleoptionpanel;
+    
+    @FXML
+    private Pane figureoptionpanel;
 	
     @FXML
     private ListView<Toy> listView;
@@ -59,22 +72,25 @@ public class SampleController implements Initializable {
     private Button btnRemove, btnSearch;
 
     @FXML
-    private ComboBox<String> categoryBox;
+    private ComboBox<String> categoryBox, newSize, newClassification, newType;
 
     @FXML
     private TextField enterType, enterSNRemove, enterSN, enterName; // Search Text Fields.
 
     @FXML
-    private TextField newMaterial, newMaxPlayers, newMinPlayers, newName, newPrice, newSN, newSize, newType, newDesigners, newCount, newClassification, newBrand,
+    private TextField newMaterial, newMaxPlayers, newMinPlayers, newName, newPrice, newSN, newDesigners, newCount, newBrand,
     newAge; // Add Toy Text Fields
 
     Toy currentSelection;
+    
 
     @FXML
     private ListView<Toy> searchListView;
     
     ObservableList<String> categoryList = FXCollections.observableArrayList("Figure", "Animal", "Puzzle", "Board Game");
-    
+    ObservableList<String> sizeList = FXCollections.observableArrayList("Small", "Medium", "Large");
+    ObservableList<String> figureList = FXCollections.observableArrayList("Action", "Doll", "Historic");
+    ObservableList<String> puzzleTypeList = FXCollections.observableArrayList("Mechanical", "Cryptic", "Logic", "Trivia", "Riddle");
 	/**
 	 * Constructor, which launches the application and loads up all data
 	 */
@@ -91,6 +107,14 @@ public class SampleController implements Initializable {
 		categoryBox.setValue("Figure");
 		categoryBox.setItems(categoryList);
 		
+		newSize.setValue("Small");
+		newSize.setItems(sizeList);
+		
+		newClassification.setValue("Action");
+		newClassification.setItems(figureList);
+		
+		newType.setValue("Mechanical");
+		newType.setItems(puzzleTypeList);
 	}
 	
     @FXML
@@ -142,42 +166,7 @@ public class SampleController implements Initializable {
 	@FXML
 	public void save(ActionEvent e) {
 		
-		StringBuilder sb = new StringBuilder();
-		
-		categoryBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("Figure")) {
-        		sb.append(newSN.getText().toString() + ";" + newClassification.getText().toString() + ";" + newName.getText().toString() + ";" + 
-        				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() + ";" 
-        				+ newAge.getText().toString());
-            }
-        		else if (newValue.equals("Animal")) {
-            		sb.append(newSN.getText().toString() + ";" + newMaterial.getText().toString() + ";" + 
-            				newSize.getText().toString() + ";" + newName.getText().toString() + ";" + 
-            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
-            				+ ";" + newAge.getText().toString());
-            }
-        		else if (newValue.equals("Puzzle")) {
-            		sb.append(newSN.getText().toString() + ";" + newType.getText().toString() + ";" + newName.getText().toString() + ";" + 
-            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
-            				+ ";" + newAge.getText().toString());
-            }
-        		else if (newValue.equals("Board Game")) {
-            		sb.append(newSN.getText().toString() + ";" + newMaterial.getText().toString() + ";" + 
-            				newMinPlayers.getText().toString() + ";" + newMaxPlayers.getText().toString() + ";" + newName.getText().toString() + 
-            				newBrand.getText().toString() + ";" + newPrice.getText().toString() + ";" + newCount.getText().toString() 
-            				+ ";" + newAge.getText().toString());
-            }
-        });
-		
-		File file = new File(FILE_PATH);
-		try {
-			FileWriter fw = new FileWriter(file, true);
-			fw.write(sb.toString());
-			fw.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+		System.out.println("Sussy baka");
 	}
 	
 	/**
@@ -267,6 +256,7 @@ public class SampleController implements Initializable {
     	}
     }
     
+    
     /**
      * Seaches for all items in the inventory that match the provided name
      * @param nameToFind the given name
@@ -280,6 +270,7 @@ public class SampleController implements Initializable {
     	}
     }
     
+    
     /**
      * Handles searches by type.
      * Clears the searchresult list, then adds all items it can find.
@@ -288,6 +279,11 @@ public class SampleController implements Initializable {
     public void searchListByType(String typeToFind) {
     	SearchResults.clear();
     	
+    	/*
+    	 * Each if statement contains a loop that iterates through the inventory.
+    	 * If the item at a given index is of the desired type, it is added to the SearchResults arraylist
+    	 * Searchresults will eventually be shown to the user. 
+    	 */
     	if(typeToFind.contains("animal")) {
     		for(int i = 0; i < Inventory.size(); i++) {
     			if(Inventory.get(i) instanceof animal) {
@@ -321,9 +317,10 @@ public class SampleController implements Initializable {
      */
     @FXML
     void buyThis(ActionEvent event) {
-    	if(searchListView.getSelectionModel().getSelectedItem() != null) {
-    		String chosenSerial = searchListView.getSelectionModel().getSelectedItem().getSerial();
-    		Inventory.get(SearchSerial(chosenSerial)).sellToy(1);
+    	if(searchListView.getSelectionModel().getSelectedItem() != null) { //If the user selects something:
+    		String chosenSerial = searchListView.getSelectionModel().getSelectedItem().getSerial(); //Grabs user selection.
+    		Inventory.get(SearchSerial(chosenSerial)).sellToy(1); //Finds a serial matching the selection in inventory.
+    		//If in search mode, it displays the search results. Otherwise, displays everything.
     		if(SearchResults.size() > 0) {
     			searchListView.getItems().clear();
     			searchListView.getItems().addAll(SearchResults);
@@ -335,6 +332,30 @@ public class SampleController implements Initializable {
     }
     
     
+    @FXML
+    void SelectCategory(ActionEvent event) {
+    	if(categoryBox.getValue().matches("Figure")) {
+    		figureoptionpanel.setVisible(true);
+    		animaloptionpanel.setVisible(false);
+    		puzzleoptionpanel.setVisible(false);
+    		boardgameoptionpanel.setVisible(false);
+    	} else if(categoryBox.getValue().matches("Animal")) {
+    		figureoptionpanel.setVisible(false);
+    		animaloptionpanel.setVisible(true);
+    		puzzleoptionpanel.setVisible(false);
+    		boardgameoptionpanel.setVisible(false);
+    	} else if(categoryBox.getValue().matches("Puzzle")) {
+    		figureoptionpanel.setVisible(false);
+    		animaloptionpanel.setVisible(false);
+    		puzzleoptionpanel.setVisible(true);
+    		boardgameoptionpanel.setVisible(false);
+    	} else if(categoryBox.getValue().matches("Board Game")) {
+    		figureoptionpanel.setVisible(false);
+    		animaloptionpanel.setVisible(false);
+    		puzzleoptionpanel.setVisible(false);
+    		boardgameoptionpanel.setVisible(true);
+    	}
+    }
     
 
 }
