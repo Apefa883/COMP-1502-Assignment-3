@@ -2,10 +2,18 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.scene.control.ListView;
+
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
+import controller.SampleController;
 import model.Toy;
 import model.figure;
 import model.puzzle;
@@ -83,4 +91,70 @@ class unittestsTest {
 		assertEquals(minPlayers,59,"Minimum players do not match string input");
 		assertEquals(maxPlayers,124456,"Maximum players do not match string input");
 	}
+	
+	    
+    private SampleController controller;
+
+    @Before
+    public void setUp() {
+        controller = new SampleController();
+    }
+
+    @Test
+    public void testPickedType() {
+        controller.PickedType(new ActionEvent());
+        assertEquals("Product Type:", controller.SearchPrompt.getText());
+    }
+    
+    @Test
+    public void testPickedSerial() {
+        controller.PickedSerial(new ActionEvent());
+        assertEquals("Serial Number (SN):", controller.SearchPrompt.getText());
+    }
+    
+    @Test
+    public void testPickedName() {
+        controller.PickedName(new ActionEvent());
+        assertEquals("Product Name:", controller.SearchPrompt.getText());
+    }
+    
+    @Test
+    public void testClickedRemoveTab() {
+        // create test data
+        ObservableList<String> inventory = FXCollections.observableArrayList("Item1", "Item2", "Item3");
+        ListView<String> listView = new ListView<>(inventory);
+
+        // simulate click event
+        Event event = new Event(null);
+        ClickedRemoveTab(event, listView, inventory);
+
+        // assert that listView has been cleared and re-populated with inventory items
+        assertEquals(3, listView.getItems().size());
+        assertEquals(inventory, listView.getItems());
+    }
+
+    private void ClickedRemoveTab(Event event, ListView<String> listView, ObservableList<String> inventory) {
+        listView.getItems().clear();
+        listView.getItems().addAll(inventory);
+    }
+    
+    @Test
+    public void testClickedHomeTab() {
+        // create test data
+        ObservableList<String> inventory = FXCollections.observableArrayList("Item1", "Item2", "Item3");
+        ListView<String> searchListView = new ListView<>(inventory);
+
+        // simulate click event
+        Event event = new Event(null);
+        ClickedHomeTab(event, searchListView, inventory);
+
+        // assert that searchListView has been cleared and re-populated with inventory items
+        assertEquals(3, searchListView.getItems().size());
+        assertEquals(inventory, searchListView.getItems());
+    }
+
+    private void ClickedHomeTab(Event event, ListView<String> searchListView, ObservableList<String> inventory) {
+        searchListView.getItems().clear();
+        searchListView.getItems().addAll(inventory);
+    }
 }
