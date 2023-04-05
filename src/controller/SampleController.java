@@ -109,6 +109,9 @@ public class SampleController implements Initializable {
 		loadData();
 	}
     
+	/**
+	 * Starts up the code by loading all necessary objects into their given places.
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
@@ -128,6 +131,10 @@ public class SampleController implements Initializable {
 		AppMen = new AppMenu();
 	}
 	
+	/**
+	 * Removes the selected toy
+	 * @param e
+	 */
     @FXML
     public void removeToy(ActionEvent e) {
     	listView.getItems().clear();
@@ -138,6 +145,10 @@ public class SampleController implements Initializable {
     	WriteToFile();
     }
     
+    /**
+     * Handles searches, fired by the search button.
+     * @param e
+     */
     @FXML
     public void search(ActionEvent e) {
     	//Type Search
@@ -168,6 +179,11 @@ public class SampleController implements Initializable {
         }
     }
     
+   
+    /**
+     * Refreshes the display list
+     * @param e
+     */
     @FXML
     public void clear(ActionEvent e) {
     	searchListView.getItems().clear();
@@ -504,18 +520,28 @@ public class SampleController implements Initializable {
     	WriteToFile();
     }
     
-    
-    
+    /**
+     * Prompts the user to pick a name.
+     * @param event
+     */
     @FXML
     void PickedName(ActionEvent event) {
     	SearchPrompt.setText("Product Name:");
     }
 
+    /**
+     * Prompts the user to pick a serial.
+     * @param event
+     */
     @FXML
     void PickedSerial(ActionEvent event) {
     	SearchPrompt.setText("Serial Number (SN):");
     }
-
+    
+    /**
+     * Prompts the user to pick a type.
+     * @param event
+     */
     @FXML
     void PickedType(ActionEvent event) {
     	SearchPrompt.setText("Product Type:");

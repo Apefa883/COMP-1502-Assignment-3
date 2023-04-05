@@ -48,7 +48,7 @@
                                  </toggleGroup></RadioButton>
                               <RadioButton fx:id="btnName" layoutX="125.0" layoutY="116.0" mnemonicParsing="false" onAction="#PickedName" text="Name" toggleGroup="$SearchOption" />
                               <RadioButton fx:id="btnType" layoutX="197.0" layoutY="116.0" mnemonicParsing="false" onAction="#PickedType" text="Type" toggleGroup="$SearchOption" />
-                              <TextField fx:id="enterSearchTerm" layoutX="51.0" layoutY="254.0" prefHeight="26.0" prefWidth="161.0" promptText="Enter SN Here." />
+                              <TextField fx:id="enterSearchTerm" layoutX="51.0" layoutY="254.0" prefHeight="26.0" prefWidth="161.0" promptText="Enter Search Term Here." />
                               <Label fx:id="SearchPrompt" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="197.0" prefHeight="18.0" prefWidth="170.0" text="Serial Number (SN)" />
                            </children>
                         </AnchorPane>
