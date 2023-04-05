@@ -93,7 +93,6 @@ public class SampleController implements Initializable {
     private Tab removetab, hometab;
     
     Toy currentSelection;
-    
 
     @FXML
     private ListView<Toy> searchListView;
@@ -126,7 +125,7 @@ public class SampleController implements Initializable {
 		
 		newType.setValue("Mechanical");
 		newType.setItems(puzzleTypeList);
-		AppMenu AppMen = new AppMenu();
+		AppMen = new AppMenu();
 	}
 	
     @FXML
